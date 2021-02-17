@@ -1,0 +1,136 @@
+---
+title: |
+  | **BIO144**  
+  | Sheet 1
+  |
+
+author: |
+  | Joel Fehr
+  | 19-736-149
+  |
+date: "Date: xx.xx.xxxx"
+output: pdf_document
+fontsize: 16pt
+header-includes: 
+
+- \usepackage{titling}
+- \usepackage{geometry}
+- \usepackage{amsmath}
+- \geometry{a4paper}
+- \usepackage{graphicx}
+- \usepackage{pdfpages}
+- \usepackage{amsfonts}
+- \usepackage{xcolor} %\textcolor{color}{text}
+- \usepackage{pgfplots}
+- \usepackage{framed}
+- \usepackage{mdframed}
+- \usepackage{sectsty} %for sans serif in titles
+- \usepackage{tikz} % for drawing
+- \usetikzlibrary{intersections}
+- \usepackage[utf8]{inputenc} %für umlaute
+- \usepackage{marginnote}
+#- \renewcommand{\familydefault}{\sfdefault} %sans serif ganzes dokument
+#- \usepackage{cmbright}
+#- \usepackage[euler-digits,small]{eulervm}
+- \usepackage{charter}
+
+
+
+- \setlength{\droptitle}{-6em}
+
+- \pretitle{
+- \vskip 2em\hrule height 0.05cm \begin{flushleft}\Huge\sffamily}
+- \posttitle{\par\end{flushleft}}
+
+
+- \preauthor{\begin{flushleft}\large\scshape}
+- \postauthor{\end{flushleft}\vskip 1em}
+
+- \predate{\begin{flushleft}\scshape}
+- \postdate{\end{flushleft}\vskip 2em\hrule height 0.05cm}
+
+- \usepackage[headsepline,footsepline]{scrlayer-scrpage}%headtopline für linie oberhalb
+- \pagestyle{scrheadings} %kopf und fusszeile
+- \ihead{Joel Fehr}
+- \chead{BIO144}
+- \ohead{19-736-149}
+- \cfoot{\pagemark}
+- \ofoot{FS21}
+- \allsectionsfont{\sffamily} %sf for sections
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+\newcommand{\exercise}[1]{\begin{mdframed}[backgroundcolor=black!20]
+	\begin{center}
+	\Large{\textsf{#1}}
+	\end{center}
+\end{mdframed}}
+
+\newcommand{\subexercise}[1]{\begin{mdframed}[backgroundcolor=black!20]
+	\begin{center}
+	\Large{\textsf{#1}}
+	\end{center}
+\end{mdframed}}
+
+\newcommand{\abs}[1]{\left|#1\right|} 
+\newcommand{\norm}[1]{\left\|#1\right\|} 
+\newcommand{\hlg}[1]{\colorbox{green!20}{#1}} 
+\newcommand{\hlb}[1]{\colorbox{blue!20}{#1}}
+\newcommand{\hlr}[1]{\colorbox{red!20}{#1}}
+\newcommand{\hly}[1]{\colorbox{yellow!20}{#1}}
+\newcommand{\nd}[3]{#1\sim\mathcal{N}(#2,#3)} 
+\newcommand{\pd}[2]{#1\sim\mathcal{P}ois(#2)} 
+\newcommand{\ed}[2]{#1\sim\mathcal{E}xp(#2)} 
+\newcommand{\cd}[2]{#1\sim\chi_{#2}^{2}}
+\newcommand{\bd}[3]{#1\sim\mathcal{B}in(#2,#3)}
+
+\newcommand{\numm}[3]{\noindent \tikz[] \filldraw[fill=#1,draw=#1] (0,0) circle (12pt) node[#2]{\Large{$#3$}};}
+
+
+
+```{r include=FALSE}
+library(extrafont)
+library(ggplot2)
+library(tidyverse)
+font_import(pattern = "lmroman*") 
+library(latex2exp)
+library(ggthemes)
+```
+
+\exercise{Exercise 1}
+\numm{black!20}{black}{a}
+
+```{r}
+x <- 1:10
+y <- x^2
+plot(x,y, main="Example",xlab = TeX('$\\alpha^2$'), family="LM Roman 10", "l", lty=2)
+```
+\pagebreak
+
+\numm{blue}{white}{b}
+
+$\nd{X_1}{\mu}{\sigma}$
+
+```{r}
+ggplot(data=iris, aes(y=Sepal.Length, x =Petal.Length, col = Species,
+                      shape = Species)) +
+	geom_point() +
+	labs(title = "Introduction to ggplot2", subtitle = "but a short one", 
+			 caption = "by Joël Fehr", tag="Plot 1",y= TeX('$\\frac{\\alpha}{\\beta^2}$'), 
+			 x = TeX('$\\alpha^\\beta$'), legend= "Legend") +
+	theme(legend.position="top",text=element_text(size=16,
+	                                              family="serif")) 
+# you can also use theme(legend.position = c(0.7, 0.2)
+```
+
+```{r}
+p <- ggplot(data=mtcars, aes(x = wt, y = mpg)) +
+  geom_point() +
+  labs(x = TeX('$\\a^2 + b^2 = c^2$'), title = 'Example')
+
+p + geom_rangeframe() +
+  theme_tufte()
+```
+
