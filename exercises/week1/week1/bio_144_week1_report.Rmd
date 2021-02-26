@@ -1,0 +1,153 @@
+---
+title: |
+  | **BIO144**  
+  | Week 1
+  |
+
+author: |
+  | Joel Fehr
+  | 19-736-149
+  |
+date: "Date: 26.02.2021"
+output: pdf_document
+fontsize: 16pt
+header-includes: 
+
+- \usepackage{titling}
+- \usepackage{geometry}
+- \usepackage{amsmath}
+- \geometry{a4paper}
+- \usepackage{graphicx}
+- \usepackage{pdfpages}
+- \usepackage{amsfonts}
+- \usepackage{xcolor} %\textcolor{color}{text}
+- \usepackage{pgfplots}
+- \usepackage{framed}
+- \usepackage{mdframed}
+- \usepackage{sectsty} %for sans serif in titles
+- \usepackage{tikz} % for drawing
+- \usetikzlibrary{intersections}
+- \usepackage[utf8]{inputenc} %für umlaute
+- \usepackage{marginnote}
+#- \renewcommand{\familydefault}{\sfdefault} %sans serif ganzes dokument
+#- \usepackage{cmbright}
+#- \usepackage[euler-digits,small]{eulervm}
+- \usepackage{charter}
+
+
+
+- \setlength{\droptitle}{-6em}
+
+- \pretitle{
+- \vskip 2em\hrule height 0.05cm \begin{flushleft}\Huge\sffamily}
+- \posttitle{\par\end{flushleft}}
+
+
+- \preauthor{\begin{flushleft}\large\scshape}
+- \postauthor{\end{flushleft}\vskip 1em}
+
+- \predate{\begin{flushleft}\scshape}
+- \postdate{\end{flushleft}\vskip 2em\hrule height 0.05cm}
+
+- \usepackage[headsepline,footsepline]{scrlayer-scrpage}%headtopline für linie oberhalb
+- \pagestyle{scrheadings} %kopf und fusszeile
+- \ihead{Joel Fehr}
+- \chead{BIO144}
+- \ohead{19-736-149}
+- \cfoot{\pagemark}
+- \ofoot{FS21}
+- \allsectionsfont{\sffamily} %sf for sections
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+\newcommand{\exercise}[1]{\begin{mdframed}[backgroundcolor=black!20]
+	\begin{center}
+	\Large{\textsf{#1}}
+	\end{center}
+\end{mdframed}}
+
+\newcommand{\subexercise}[1]{\begin{mdframed}[backgroundcolor=black!20]
+	\begin{center}
+	\Large{\textsf{#1}}
+	\end{center}
+\end{mdframed}}
+
+\newcommand{\abs}[1]{\left|#1\right|} 
+\newcommand{\norm}[1]{\left\|#1\right\|} 
+\newcommand{\hlg}[1]{\colorbox{green!20}{#1}} 
+\newcommand{\hlb}[1]{\colorbox{blue!20}{#1}}
+\newcommand{\hlr}[1]{\colorbox{red!20}{#1}}
+\newcommand{\hly}[1]{\colorbox{yellow!20}{#1}}
+\newcommand{\nd}[3]{#1\sim\mathcal{N}(#2,#3)} 
+\newcommand{\pd}[2]{#1\sim\mathcal{P}ois(#2)} 
+\newcommand{\ed}[2]{#1\sim\mathcal{E}xp(#2)} 
+\newcommand{\cd}[2]{#1\sim\chi_{#2}^{2}}
+\newcommand{\bd}[3]{#1\sim\mathcal{B}in(#2,#3)}
+
+\newcommand{\numm}[3]{\noindent \tikz[] \filldraw[fill=#1,draw=#1] (0,0) circle (12pt) node[#2]{\Large{$#3$}};}
+
+
+
+```{r include=FALSE}
+library(extrafont)
+library(ggplot2)
+library(tidyverse)
+font_import(pattern = "lmroman*") 
+library(latex2exp)
+library(ggthemes)
+```
+
+\section{Reaction time Male vs Female}
+
+In this short report we try to find out if there is a significant difference in reaction times between Males and Females. We use data, which we have collectet in the lecture on monday.
+
+```{r}
+the_URL <- "https://docs.google.com/spreadsheets/d/e/2PACX-1vQFgYX1QhF9-UXep22XmPow1ZK5nbFHix9nkQIa0DzqUhPtZRxH1HtY-hsno32zDiuIHiLb2Hvphk1L/pub?gid=1188775314&single=true&output=csv"
+class_RTs <- read_csv(the_URL)
+names(class_RTs) <- c("Timestamp", "ID", "Gender", "Pref_Reaction_time_1",
+                      "Verbal_memory_score", "Number_memory_score",
+                      "Visual_memory_score",
+                      "Weight_kgs", "Handed", "Nonpref_Reaction_time_ave",
+                      "Pref_Reaction_time_2", "Pref_Reaction_time_3", 
+                      "Pref_Reaction_time_4", "Pref_Reaction_time_5",
+                      "Pref_Reaction_time", "Random_number")
+class_RTs %>%
+  group_by(Gender) %>%
+  summarise(number = n())
+```
+
+```{r}
+library(ggplot2)
+library(gridExtra)
+p1 <- ggplot(data=class_RTs, aes(x=Pref_Reaction_time_1)) +
+  geom_histogram(binwidth = 30)
+p2 <- ggplot(data=class_RTs, aes(x=Pref_Reaction_time_1)) +
+  geom_histogram(binwidth=30) +
+  facet_grid(.~Gender)
+grid.arrange(p1,p2,nrow=2)
+```
+
+```{r}
+p1 <- ggplot(data=class_RTs, aes(x=Gender, y=Pref_Reaction_time_1,color=Gender,alpha=Pref_Reaction_time_1)) +
+  geom_jitter(width=0.05) + labs(alpha='Reaction time',title='Reaction time Female vs Male',y='Reaction time (seconds)')
+p2 <- ggplot(data=class_RTs, aes(x=Gender, y=Pref_Reaction_time)) +
+  geom_boxplot() +
+  ylab("Reaction time (seconds)")
+grid.arrange(p1,p2,ncol=2)
+```
+
+\vspace{1cm}
+
+\exercise{Findings}
+
+The last part of the exercise is to report your findings, including the direction and size of the difference in reaction times between males and females, and a measure of uncertainty in that difference.
+
+\begin{itemize}
+\item{The direction of the differences is than Females have a longer reaction time than males.}
+\item{mean in females: $307.9606$ mean in males: $277.6809$}
+\item{As we can see, the p-value is very low so it is unlikely to reach this result with the assuption that there is no difference between males and females in reaction time}
+\item{The confidence interwall shows that we have a probability of $95 \%$ that the difference will be between $9.7$ and $50.8$ $ms$ in reaction time between males and females.}
+\end{itemize}
+
